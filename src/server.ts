@@ -1,15 +1,15 @@
-import express, { request, response } from "express";
+// Import database
+import "reflect-metadata";
+import "./database";
+
+import express from "express";
+import { router } from "./routers";
 
 //Initialize express function
 const app = express();
 
-app.get("/", (request, response) => {
-	return response.json({ message: "Hello World!" });
-});
-
-app.post("/", (request, response) => {
-	return response.json({ message: "Data saved successfully " });
-});
+app.use(express.json());
+app.use(router);
 
 // Define server
 app.listen(3333, () => console.log("Server is running!"));
