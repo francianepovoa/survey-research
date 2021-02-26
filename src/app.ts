@@ -1,16 +1,30 @@
-// Import database
 import "reflect-metadata";
+import express, { NextFunction, Request, Response } from "express";
+import "express-async-errors";
 import createConnection from "./database";
-
-import express from "express";
 import { router } from "./routers";
+import { AppError } from "./errors/AppError";
 
 createConnection();
-//Initialize express function
 const app = express();
 
 app.use(express.json());
 app.use(router);
+
+app.use(
+	(err: Error, request: Request, response: Response, _next: NextFunction) => {
+		if (err instanceof AppError) {
+			return response.status(err.statusCode).json({
+				message: err.message,
+			});
+		}
+
+		return response.status(500).json({
+			status: "Error",
+			message: `Internal server error ${err.message}`,
+		});
+	}
+);
 
 export { app };
 
@@ -39,4 +53,17 @@ export { app };
 //?  Nessa última aula vamos finalizar o fluxo da nossa aplicação, inserir validações dos dados recebidos e
 //?  aprender como tratar os possíveis erros.
 
-////DELETE FROM (surveys_users)
+// ----- Codigos -----
+//* Códigos para uso no terminal:
+//? yarn dev -- inicia o servidor
+//? yarn test -- inicia os testes
+
+//* Insomia
+//? Users  POST- cria novo usuário
+//? Surveys POST- cria nova pesquisa
+//? Surveys GET- Mostra as pesquisas
+//? SendMail POST - envia a pesquisa
+//? NPS GET- mostra os resultados
+
+//* BeeKeeper
+//? DELETE FROM (NAME DB)

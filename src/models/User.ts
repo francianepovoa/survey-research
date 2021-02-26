@@ -21,4 +21,5 @@ class User {
 		}
 	}
 }
+
 export { User };
